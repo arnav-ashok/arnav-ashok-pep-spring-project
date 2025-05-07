@@ -16,7 +16,9 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
     //3. Process the creation of new messages
-    
+    public Message persistMessage(Message message){
+        return messageRepository.save(message);
+    }
     
     //4. Retrieve all messages
     public List<Message> getAllMessages(){
@@ -35,14 +37,24 @@ public class MessageService {
     }
     //6. Delete a message identified by ID
 
-    public void deleteMessage(long id){
+    public void deleteMessageById(long id){
         messageRepository.deleteById(id);
     }
    
     //7. Update a message text identified by ID
+    public int updateMessageById(long id, String messagetext){
+        Optional<Message> optionalMessage=messageRepository.findById(id);
+        if(optionalMessage.isPresent()){
+            Message message = optionalMessage.get();
+            message.setMessageText(messagetext);
+            messageRepository.save(message);
+            return 1;
+        }else{
+            return 0;
+        }
 
-    
-    
+    }
+        
     //8. Retrieve all messages by an account/user
 
 }
