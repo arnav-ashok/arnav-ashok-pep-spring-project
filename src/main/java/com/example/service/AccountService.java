@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.exception.CustomException;
+import com.example.exception.UnauthorizedException;
+import com.example.exception.UsernameAlreadyExistsException;
+import com.example.exception.InvalidException;
 
 @Service
 public class AccountService {
@@ -24,16 +26,16 @@ public class AccountService {
     public Account persistAccount(Account account){
         Optional<Account> queriedAccount=accountRepository.findAccountByUsername(account.getUsername());
         if(queriedAccount.isPresent()){
-            throw new OtherException("Account already exists.");
+            throw new UsernameAlreadyExistsException("Account already exists.");
         }
         if(account == null){
-            throw new OtherException("Account cannot be null.");
+            throw new UnauthorizedException("Account cannot be null.");
         }
         if (account.getUsername() == null ||!(account.getUsername().length() > 0)||account.getUsername().trim().isEmpty()){
-            throw new OtherException("Username must be valid.");
+            throw new UnauthorizedException("Username must be valid.");
         }
         if(account.getPassword() == null ||!(account.getPassword().length() >= 4)||account.getPassword().trim().isEmpty()){
-            throw new OtherException("Password must be greater than 4 and not empty.");
+            throw new UnauthorizedException("Password must be greater than 4 and not empty.");
         }
         return accountRepository.save(account);
     }
@@ -42,11 +44,11 @@ public class AccountService {
     public Account loginAccount(Account account){
         String username = account.getUsername();
         if(username == null ||!(username.length() > 0)||username.trim().isEmpty()){
-            throw new OtherException("Username must be valid");
+            throw new UnauthorizedException("Username must be valid");
         }
         String password= account.getPassword();
         if(password == null ||!(password.length() >= 4)||password.trim().isEmpty()){
-            throw new OtherException("Password must be greater than 4 and not empty.");
+            throw new UnauthorizedException("Password must be greater than 4 and not empty.");
         }
         Optional<Account> queriedAccount = accountRepository.findAccountByUsername(username);
         if(queriedAccount.isPresent()){
@@ -55,6 +57,6 @@ public class AccountService {
                 return retrievedAccount;
             }
         }
-        throw new OtherException("Login Failed");
+        throw new UnauthorizedException("Login Failed");
     }
 }

@@ -4,7 +4,9 @@ import com.example.repository.MessageRepository;
 import com.example.entity.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.example.exception.UnauthorizedException;
+import com.example.exception.UsernameAlreadyExistsException;
+import com.example.exception.InvalidException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,15 +21,15 @@ public class MessageService {
     //3. Process the creation of new messages
     public Message persistMessage(Message message){
         if(message == null){
-            throw new OtherException("Input a valid message object.");
+            throw new InvalidException("Input a valid message object.");
         }
 
         Optional<Message> queriedMessagePostedBy = messageRepository.findById((long)message.getPostedBy());
         if(!queriedMessagePostedBy.isPresent()){
-            throw new OtherException("Account does not exist");
+            throw new InvalidException("Account does not exist");
         } 
         if(message.getMessageText() == null || message.getMessageText().length()>255||message.getMessageText().trim().isEmpty()){
-            throw new OtherException("Message contents invalid.");
+            throw new InvalidException("Message contents invalid.");
         }
         return messageRepository.save(message);
         
@@ -47,7 +49,8 @@ public class MessageService {
         if(retrievedMessage.isPresent()){
             return retrievedMessage.get();
         }
-        throw new OtherException("Message not found with this id: "+ id);
+        return null;
+
     }
     //6. Delete a message identified by ID
 
@@ -62,7 +65,7 @@ public class MessageService {
     //7. Update a message text identified by ID
     public int updateMessageById(long id, String messagetext){
         if(messagetext == null || messagetext.trim().isEmpty() || messagetext.length() > 255) {
-            throw new OtherException("Message content invalid.");
+            throw new InvalidException("Message content invalid.");
         }
         Optional<Message> retrievedMessage=messageRepository.findById(id);
         if(retrievedMessage.isPresent()){
