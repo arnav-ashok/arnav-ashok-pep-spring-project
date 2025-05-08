@@ -15,9 +15,22 @@ public class MessageService {
     public MessageService(MessageRepository messageRepository){
         this.messageRepository = messageRepository;
     }
+
     //3. Process the creation of new messages
     public Message persistMessage(Message message){
+        if(message == null){
+            throw new OtherException("Input a valid message object.");
+        }
+
+        Optional<Message> queriedMessagePostedBy = messageRepository.findById(message.getPostedBy());
+        if(!queriedMessagePostedBy.isPresent()){
+            throw new OtherException("Account does not exist");
+        } 
+        if(message.getMessageText() == null || message.getMessageText().length()>255||message.getMessageText().trim().isEmpty()){
+            throw new OtherException("Message contents invalid.");
+        }
         return messageRepository.save(message);
+        
     }
     
     //4. Retrieve all messages
