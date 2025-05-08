@@ -4,8 +4,6 @@ import com.example.repository.MessageRepository;
 import com.example.entity.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.exception.UnauthorizedException;
-import com.example.exception.UsernameAlreadyExistsException;
 import com.example.exception.InvalidException;
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +21,7 @@ public class MessageService {
         if(message == null){
             throw new InvalidException("Input a valid message object.");
         }
-
-        Optional<Message> queriedMessagePostedBy = messageRepository.findById((long)message.getPostedBy());
+        Optional<Message> queriedMessagePostedBy = messageRepository.findMessageByPostedBy((long)message.getPostedBy());
         if(!queriedMessagePostedBy.isPresent()){
             throw new InvalidException("Account does not exist");
         } 

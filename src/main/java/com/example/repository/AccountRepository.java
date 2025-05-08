@@ -1,12 +1,11 @@
 package com.example.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.sql.Timestamp;
-import java.util.List;
+import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 import com.example.entity.Account;
 
+@Repository
 public interface AccountRepository extends JpaRepository<Account, Long>{
     //1. Process new user registrations with a username/password
     Optional<Account> findAccountByUsername(String username);

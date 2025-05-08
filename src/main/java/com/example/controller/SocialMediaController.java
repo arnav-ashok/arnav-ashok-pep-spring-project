@@ -1,6 +1,5 @@
 package com.example.controller;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -110,8 +109,8 @@ public class SocialMediaController {
 
     //8. Retrieve all messages by an account/user 
     @GetMapping("/accounts/{account_id}/messages")
-    public List<Message> getMessagesByPostedBy(@PathVariable ("account_id") long id){
-        return messageservice.getMessagesByUser(id);
+    public ResponseEntity<List<Message>> getMessagesByPostedBy(@PathVariable ("account_id") long id){
+        return new ResponseEntity<>(messageservice.getMessagesByUser(id), HttpStatus.OK);
 
     }
     
