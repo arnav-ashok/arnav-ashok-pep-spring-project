@@ -22,7 +22,7 @@ public class MessageService {
             throw new OtherException("Input a valid message object.");
         }
 
-        Optional<Message> queriedMessagePostedBy = messageRepository.findById(message.getPostedBy());
+        Optional<Message> queriedMessagePostedBy = messageRepository.findById((long)message.getPostedBy());
         if(!queriedMessagePostedBy.isPresent()){
             throw new OtherException("Account does not exist");
         } 
@@ -61,6 +61,9 @@ public class MessageService {
    
     //7. Update a message text identified by ID
     public int updateMessageById(long id, String messagetext){
+        if(messagetext == null || messagetext.trim().isEmpty() || messagetext.length() > 255) {
+            throw new OtherException("Message content invalid.");
+        }
         Optional<Message> retrievedMessage=messageRepository.findById(id);
         if(retrievedMessage.isPresent()){
             Message message = retrievedMessage.get();
@@ -69,10 +72,12 @@ public class MessageService {
             return 1;
         }
         return 0;
-
     }
         
     //8. Retrieve all messages by an account/user
-    public List<Message> getMessagesByUser()
+    public List<Message> getMessagesByUser(long postedBy){
+        return messageRepository.findMessagesByPostedBy(postedBy);
+
+    }
 
 }

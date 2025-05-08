@@ -26,7 +26,8 @@ public interface MessageRepository extends JpaRepository<Message, Long>{
 
     
     
-    //8. Retrieve all messages by an account/user
+    //8. Retrieve all messages by an account/user 
+    List<Message> findMessagesByPostedBy(long postedBy);
 
     
 }

@@ -22,7 +22,7 @@ public class AccountService {
 
     //1. Process new user registrations with a username/password
     public Account persistAccount(Account account){
-        Optional<Account> queriedAccount=accountRepository.findByUsername(account.getUsername());
+        Optional<Account> queriedAccount=accountRepository.findAccountByUsername(account.getUsername());
         if(queriedAccount.isPresent()){
             throw new OtherException("Account already exists.");
         }
@@ -41,14 +41,14 @@ public class AccountService {
     //2. Process user logins that match the DB username/password
     public Account loginAccount(Account account){
         String username = account.getUsername();
-        if(account.getUsername() == null ||!(account.getUsername().length() > 0)||account.getUsername().trim().isEmpty()){
+        if(username == null ||!(username.length() > 0)||username.trim().isEmpty()){
             throw new OtherException("Username must be valid");
         }
         String password= account.getPassword();
-        if(account.getPassword() == null ||!(account.getPassword().length() >= 4)||account.getPassword().trim().isEmpty()){
+        if(password == null ||!(password.length() >= 4)||password.trim().isEmpty()){
             throw new OtherException("Password must be greater than 4 and not empty.");
         }
-        Optional<Account> queriedAccount = accountRepository.findByUsername(username);
+        Optional<Account> queriedAccount = accountRepository.findAccountByUsername(username);
         if(queriedAccount.isPresent()){
             Account retrievedAccount=queriedAccount.get();
             if(retrievedAccount.getUsername().equals(username)&& retrievedAccount.getPassword().equals(password)){
