@@ -34,25 +34,55 @@ public class SocialMediaController {
 
     //1. Process new user registrations with a username/password
     @PostMapping("/register")
+    public Account registerAccount(@RequestBody Account a){
+
+    }
+
     //2. Process user logins that match the DB username/password
     @PostMapping("/login")
+    public Account loginAccount(@RequestBody Account a){
+
+    }
+
+
     //3. Process the creation of new messages
     @PostMapping("/messages")
+    public Message createMessage(@RequestBody Message m){
+
+    }
     
     //4. Retrieve all messages
     @GetMapping("/messages")
+    public List<Message> getAllMessages(){
+
+    }
 
     //5. Retrieve a message by ID
     @GetMapping("/messages/{message_id}")
+    public Message getMessageById(@PathVariable ("message_id") long id){
+
+    }
     
+
     //6. Delete a message identified by ID
     @DeleteMapping("/messages/{message_id}")
+    public int deleteMessageById(@PathVariable ("message_id") long id){
+
+    }
+
+
     
     //7. Update a message text identified by ID
     @PatchMapping("/messages/{message_id}")
+    public int updateMessageById(@PathVariable ("message_id") long id){
+
+    }
 
     //8. Retrieve all messages by an account/user 
     @GetMapping("/accounts/{account_id}/messages")
+    public List<Message> getMessagesByPostedBy(@PathVariable ("account_id") long id){
+
+    }
     
 
 }
