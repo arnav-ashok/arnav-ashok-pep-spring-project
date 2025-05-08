@@ -9,13 +9,13 @@ import com.example.entity.Message;
 
 public interface MessageRepository extends JpaRepository<Message, Long>{
     //3. Process the creation of new messages
-    
+    //Using the save method here
     
     //4. Retrieve all messages
-    
+    //Using the find all method here
 
     //5. Retrieve a message by ID
-    
+    Message findMessageById(long id);
     
     
     //6. Delete a message identified by ID

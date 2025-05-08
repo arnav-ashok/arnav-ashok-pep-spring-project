@@ -37,37 +37,42 @@ public class MessageService {
     public List<Message> getAllMessages(){
         return messageRepository.findAll();
     }
+
     //5. Retrieve a message by ID
     public Message getMessageById(long id){
+
         //findById returns a type Optional<>. This helps the developer avoid null pointer 
         // exceptions. We can use the method .get() to convert an Optional<Message> to Message.
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        if(optionalMessage.isPresent()){
-            return optionalMessage.get();
-        }else{
-            return null;
+        Optional<Message> retrievedMessage = messageRepository.findById(id);
+        if(retrievedMessage.isPresent()){
+            return retrievedMessage.get();
         }
+        throw new OtherException("Message not found with this id: "+ id);
     }
     //6. Delete a message identified by ID
 
-    public void deleteMessageById(long id){
-        messageRepository.deleteById(id);
+    public int deleteMessageById(long id){
+        if(messageRepository.existsById(id)){
+            messageRepository.deleteById(id);
+            return 1;
+        }
+        return 0;
     }
    
     //7. Update a message text identified by ID
     public int updateMessageById(long id, String messagetext){
-        Optional<Message> optionalMessage=messageRepository.findById(id);
-        if(optionalMessage.isPresent()){
-            Message message = optionalMessage.get();
+        Optional<Message> retrievedMessage=messageRepository.findById(id);
+        if(retrievedMessage.isPresent()){
+            Message message = retrievedMessage.get();
             message.setMessageText(messagetext);
             messageRepository.save(message);
             return 1;
-        }else{
-            return 0;
         }
+        return 0;
 
     }
         
     //8. Retrieve all messages by an account/user
+    public List<Message> getMessagesByUser()
 
 }
