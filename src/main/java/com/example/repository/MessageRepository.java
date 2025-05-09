@@ -7,7 +7,7 @@ import java.util.List;
 import com.example.entity.Message;
 import java.util.Optional;
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long>{
+public interface MessageRepository extends JpaRepository<Message, Integer>{
     //3. Process the creation of new messages
     //Using the save method here
     Optional<Message> findMessageByPostedBy(long postedBy);
@@ -27,7 +27,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>{
     
     
     //8. Retrieve all messages by an account/user 
-    List<Message> findMessagesByPostedBy(long postedBy);
+    List<Message> findMessagesByPostedBy(int postedBy);
 
     
 }

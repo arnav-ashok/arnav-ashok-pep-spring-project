@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.example.entity.Account;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Long>{
+public interface AccountRepository extends JpaRepository<Account, Integer>{
     //1. Process new user registrations with a username/password
     Optional<Account> findAccountByUsername(String username);
     //2. Process user logins that match the DB username/password

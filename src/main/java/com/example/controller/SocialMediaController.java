@@ -77,7 +77,7 @@ public class SocialMediaController {
 
     //5. Retrieve a message by ID
     @GetMapping("/messages/{messageId}")
-    public ResponseEntity<Message> getMessageById(@PathVariable ("messageId") long id){
+    public ResponseEntity<Message> getMessageById(@PathVariable ("messageId") int id){
         Message message= messageservice.getMessageById(id);
 
         if(message==null){
@@ -90,10 +90,14 @@ public class SocialMediaController {
     
 
     //6. Delete a message identified by ID
-    @DeleteMapping("/messages/{message_id}")
-    public ResponseEntity<Integer> deleteMessageById(@PathVariable ("message_id") long id){
+    @DeleteMapping("/messages/{messageId}")
+    public ResponseEntity<Integer> deleteMessageById(@PathVariable ("messageId") int id){
         int indicator = messageservice.deleteMessageById(id);
-        return new ResponseEntity<>(indicator, HttpStatus.OK);
+        if(indicator==1){
+            return new ResponseEntity<>(indicator, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
 
     }
 
@@ -101,9 +105,9 @@ public class SocialMediaController {
     
     //7. Update a message text identified by ID
     @PatchMapping("/messages/{messageId}")
-    public ResponseEntity<Integer> updateMessageById(@PathVariable ("messageId") long id, @RequestBody String messagetext){
+    public ResponseEntity<Integer> updateMessageById(@PathVariable ("messageId") int id, @RequestBody Message m){
         try{
-            int indicator= messageservice.updateMessageById(id, messagetext);
+            int indicator= messageservice.updateMessageById(id, m);
             return new ResponseEntity<>(indicator, HttpStatus.OK);
         }catch(InvalidException i){
             i.printStackTrace();
@@ -115,7 +119,7 @@ public class SocialMediaController {
 
     //8. Retrieve all messages by an account/user 
     @GetMapping("/accounts/{account_id}/messages")
-    public ResponseEntity<List<Message>> getMessagesByPostedBy(@PathVariable ("account_id") long id){
+    public ResponseEntity<List<Message>> getMessagesByPostedBy(@PathVariable ("account_id") int id){
         return new ResponseEntity<>(messageservice.getMessagesByUser(id), HttpStatus.OK);
 
     }

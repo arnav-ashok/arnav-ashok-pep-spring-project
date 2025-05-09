@@ -25,7 +25,7 @@ public class MessageService {
         if (m==null){
             throw new InvalidException("Null message");
         }
-        Optional<Account> existingAccount = accountRepository.findById((long)m.getPostedBy());
+        Optional<Account> existingAccount = accountRepository.findById(m.getPostedBy());
         if(existingAccount.isEmpty()){
             throw new InvalidException("No existing account");
         }
@@ -43,7 +43,7 @@ public class MessageService {
     }
 
     //5. Retrieve a message by ID
-    public Message getMessageById(long id){
+    public Message getMessageById(int id){
         //findById returns a type Optional<>. This helps the developer avoid null pointer 
         // exceptions. We can use the method .get() to convert an Optional<Message> to Message.
         Optional<Message> retrievedMessage = messageRepository.findById(id);
@@ -55,7 +55,7 @@ public class MessageService {
     }
     //6. Delete a message identified by ID
 
-    public int deleteMessageById(long id){
+    public int deleteMessageById(int id){
         if(messageRepository.existsById(id)){
             messageRepository.deleteById(id);
             return 1;
@@ -64,8 +64,8 @@ public class MessageService {
     }
    
     //7. Update a message text identified by ID
-    public int updateMessageById(long id, String messagetext){
-        if(messagetext == null || messagetext.trim().isEmpty() || messagetext.length() > 255) {
+    public int updateMessageById(int id, Message m){
+        if(m.getMessageText() == null || m.getMessageText().trim().isEmpty() || m.getMessageText().length() > 255) {
             throw new InvalidException("Message content invalid.");
         }
         Optional<Message> retrievedMessage=messageRepository.findById(id);
@@ -73,13 +73,13 @@ public class MessageService {
             throw new InvalidException("Message not found.");
         }
         Message message = retrievedMessage.get();
-        message.setMessageText(messagetext);
+        message.setMessageText(m.getMessageText());
         messageRepository.save(message);
         return 1;
     }
         
     //8. Retrieve all messages by an account/user
-    public List<Message> getMessagesByUser(long postedBy){
+    public List<Message> getMessagesByUser(int postedBy){
         return messageRepository.findMessagesByPostedBy(postedBy);
 
     }
