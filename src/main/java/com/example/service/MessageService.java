@@ -1,6 +1,8 @@
 package com.example.service;
 
 import com.example.repository.MessageRepository;
+import com.example.repository.AccountRepository;
+import com.example.entity.Account;
 import com.example.entity.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,24 +13,27 @@ import java.util.Optional;
 @Service
 public class MessageService {
     MessageRepository messageRepository;
+    AccountRepository accountRepository;
     @Autowired
-    public MessageService(MessageRepository messageRepository){
+    public MessageService(MessageRepository messageRepository, AccountRepository accountRepository){
         this.messageRepository = messageRepository;
+        this.accountRepository= accountRepository;
     }
 
     //3. Process the creation of new messages
-    public Message persistMessage(Message message){
-        if(message == null){
-            throw new InvalidException("Input a valid message object.");
+    public Message persistMessage(Message m){
+        if (m==null){
+            throw new InvalidException("Null message");
         }
-        Optional<Message> queriedMessagePostedBy = messageRepository.findMessageByPostedBy((long)message.getPostedBy());
-        if(!queriedMessagePostedBy.isPresent()){
-            throw new InvalidException("Account does not exist");
-        } 
-        if(message.getMessageText() == null || message.getMessageText().length()>255||message.getMessageText().trim().isEmpty()){
-            throw new InvalidException("Message contents invalid.");
+        Optional<Account> existingAccount = accountRepository.findById((long)m.getPostedBy());
+        if(existingAccount.isEmpty()){
+            throw new InvalidException("No existing account");
         }
-        return messageRepository.save(message);
+        if(m.getMessageText()==null||m.getMessageText().length()>255||m.getMessageText().trim().isEmpty()){
+            throw new InvalidException("Enter valid credentials");
+        }
+        return messageRepository.save(m);
+
         
     }
     
@@ -39,7 +44,6 @@ public class MessageService {
 
     //5. Retrieve a message by ID
     public Message getMessageById(long id){
-
         //findById returns a type Optional<>. This helps the developer avoid null pointer 
         // exceptions. We can use the method .get() to convert an Optional<Message> to Message.
         Optional<Message> retrievedMessage = messageRepository.findById(id);
@@ -65,13 +69,13 @@ public class MessageService {
             throw new InvalidException("Message content invalid.");
         }
         Optional<Message> retrievedMessage=messageRepository.findById(id);
-        if(retrievedMessage.isPresent()){
-            Message message = retrievedMessage.get();
-            message.setMessageText(messagetext);
-            messageRepository.save(message);
-            return 1;
+        if(retrievedMessage.isEmpty()){
+            throw new InvalidException("Message not found.");
         }
-        return 0;
+        Message message = retrievedMessage.get();
+        message.setMessageText(messagetext);
+        messageRepository.save(message);
+        return 1;
     }
         
     //8. Retrieve all messages by an account/user

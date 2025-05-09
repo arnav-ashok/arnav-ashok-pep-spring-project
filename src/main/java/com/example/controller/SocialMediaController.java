@@ -76,9 +76,14 @@ public class SocialMediaController {
     }
 
     //5. Retrieve a message by ID
-    @GetMapping("/messages/{message_id}")
-    public ResponseEntity<Message> getMessageById(@PathVariable ("message_id") long id){
+    @GetMapping("/messages/{messageId}")
+    public ResponseEntity<Message> getMessageById(@PathVariable ("messageId") long id){
         Message message= messageservice.getMessageById(id);
+
+        if(message==null){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
         return new ResponseEntity<>(message, HttpStatus.OK);
 
     }
@@ -95,12 +100,13 @@ public class SocialMediaController {
 
     
     //7. Update a message text identified by ID
-    @PatchMapping("/messages/{message_id}")
-    public ResponseEntity<Integer> updateMessageById(@PathVariable ("message_id") long id, @RequestBody Message m){
+    @PatchMapping("/messages/{messageId}")
+    public ResponseEntity<Integer> updateMessageById(@PathVariable ("messageId") long id, @RequestBody String messagetext){
         try{
-            int indicator= messageservice.updateMessageById(id, m.getMessageText());
+            int indicator= messageservice.updateMessageById(id, messagetext);
             return new ResponseEntity<>(indicator, HttpStatus.OK);
         }catch(InvalidException i){
+            i.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         }

@@ -15,8 +15,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>{
     //4. Retrieve all messages
     //Using the find all method here
 
-    //5. Retrieve a message by ID
-    Message findByMessageId(long id);
+    //5. Retrieve a message by Id
     
     
     //6. Delete a message identified by ID
